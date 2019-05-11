@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <style>
+        #app{
+            padding: 10%;
+        }
+        table{
+            width: 100%;
+        }
+        table td{
+          width:  50%;
+        }
+
+        .form-item:not(:last-child){
+            margin-bottom: 20px;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <h1>{{ title1 }}</h1>
+                            <form>
+                                <div class="form-item">
+                                    <label>Name:</label>
+                                    <input type="text" placeholder="Enter name" v-model.lazy="name" /> 
+                                </div>
+                                <div class="form-item">
+                                    <label>Gender:</label>
+                                    <input type="radio" name="gender" value="Male" v-model="gender"/>Male &nbsp; 
+                                    <input type="radio" name="gender" value="Female" v-model="gender"/>Female &nbsp; 
+                                </div>
+                                <div class="form-item">
+                                    <label>Stream:</label>
+                                    <select v-model="stream">
+                                        <option disabled value="">Select a stream</option>
+                                        <option>Science</option>
+                                        <option>Vocational</option>
+                                        <option>Arts</option>
+                                    </select> 
+                                </div>
+                                <div class="form-item">
+                                    <label>Sports:</label>
+                                    <input type="checkbox" name="sports" value="Football" v-model="sports"/> Football &nbsp; 
+                                    <input type="checkbox" name="sports" value="Cricket" v-model="sports" /> Cricket &nbsp; 
+                                    <input type="checkbox" name="sports" value="Hockey" v-model="sports"/> Hockey &nbsp; 
+                                    <input type="checkbox" name="sports" value="Golf" v-model="sports" /> Golf &nbsp; 
+                                </div>
+                                <div class="form-item">
+                                    <label>Perentage:</label>
+                                    <input type="number" placeholder="Enter percentage" v-model="percentage"/> 
+                                </div>
+                               <template v-if="percentage > 90">
+                                <div class="form-item">
+                                    <label>Apply scholarship:</label>
+                                    <input type="checkbox" v-model="scholarshipApplied"/> 
+                                </div>
+                                </template>
+                            </form>
+                        </td>
+                        <td>
+                            <h1>{{ title2 }}</h1>
+                            <h3>Your name is : {{ name }} </h3>
+                            <h3>Your gender is :  {{ gender }} </h3>
+                            <h3>Your stream is :  {{ stream }} </h3>
+                            <h3>Sports played : {{ sportsPlayed }} </h3>
+                            <h3>Percentage :  {{ percentage }}</h3>
+                           
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <script src="./vue.js"></script>
+        <script>
+            var vue = new Vue({
+                el: "#app",
+                data: {
+                    title1: "Form",
+                    title2: "Form summary",
+                    name: "",
+                    gender: "",
+                    stream: "",
+                    sports: [],
+                    percentage: 0,
+                    scholarshipApplied: false,
+                },
+                computed:{
+                    sportsPlayed: function(){
+                        let result ="";
+                        if(this.sports && this.sports.length){
+                            this.sports.forEach((sport,i) =>{
+                                result += sport;
+                                if(i !== this.sports.length-1){
+                                    result += ", ";
+                                }
+                            });
+                        }
+                            return result;
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
