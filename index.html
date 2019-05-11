@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <title>Vue Demo</title>
+        <style>
+            .complete{
+                text-decoration: line-through;
+            }
+        </style>
+    </head>
+    <body>
+    
+        <div id="app">
+                <h1>{{ title }}</h1>
+                <div v-html="titleHTML"></div>
+                
+                <div>{{ tasksProgress }}</div>
+            <br/>
+                <label>New item :</label>
+                <input type="text" v-model="newItem"/>
+                <button type="button" v-on:click="addItem">Add Item</button>
+                
+                <ul>
+                    <li v-for="(item, i) in items">
+                        <input type="checkbox" v-model="item.completed" /> 
+                        <span v-bind:class="{'complete' : item.completed}">{{ item.task }}  
+                            <span v-show="item.completed">
+                                <a v-on:click="removeItem(i)"> - Remove</a>
+                            </span>
+                        </span>
+                    </li>
+                </ul>
+                <hr>
+                <label>Title : </label>
+                <input type="text" v-model="title" />
+
+        </div>
+        <script  src="./vue.js"></script>
+        <script>
+            var data = {
+                items: [
+                    {task: "Mango", completed: false},
+                    {task: "Apples", completed: false},
+                    {task: "Grapes", completed: true},
+                    {task: "Oranges", completed: true},
+                ],
+                records:[
+                    {id: 1, name: "John", age: 45},
+                    {id: 2, name: "Sam", age: 15},
+                    {id: 3, name: "Tom", age: 10},
+                    {id: 4, name: "Peter", age:25},
+                    {id: 4, name: "Jerry", age: 55},
+                ],
+                title: "My shopping list",
+                titleHTML: "<h1 style='color:red'>My Shopping list new</h1>",
+                newItem: ""
+            }
+            new Vue({
+                el: '#app',
+                data: data,
+                methods:{
+                  addItem: function(){
+                        if(this.newItem && this.newItem.length){
+                            var tmp = {
+                                task: this.newItem,
+                                completed: false
+                            }
+                            this.items.push(tmp);
+                            this.newItem ="";
+                        }
+                    
+                  },
+                  removeItem: function(index){
+                      this.items.splice(index, 1);
+                  }  
+                },
+                computed:{
+                    tasksProgress: function(){
+                        var incompleteTasks  = 0;
+                        this.items.forEach(item =>{
+                            if(!item.completed) incompleteTasks++
+                        });
+                        if(incompleteTasks){
+                            return incompleteTasks+" tasks remaining"
+                        }else{
+                            return "Awesome your done for today";
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

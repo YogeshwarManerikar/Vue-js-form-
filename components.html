@@ -1,0 +1,125 @@
+<html>
+    <head>
+        <style>
+            #app{
+                text-align: center;
+            }
+            .trigger-button{
+                height: 100px;
+                width: 300px;
+                font-size: 40px;
+            }
+
+            .tick-value{
+                font-size: 80px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="app">
+            <h1>{{ title }}</h1>
+            <div>
+                <div>
+                        <countdown-component v-on:countdown-completed="countdownCompletion" v-bind:started="countdownStatus"/>
+                </div>
+                <div>
+                        <button-component v-on:countdown-started="countdownStarted" v-bind:completed="countdownCompleted"/>
+                </div>
+               
+            </div>
+        </div>
+        <script src="./vue.js"></script>
+        <script>
+
+// Button Component -----------------------------------------
+
+        Vue.component('button-component',{
+           data: function(){
+               return{
+                   countdownStarted: false
+               }
+           },
+           props: ['completed'],
+           watch:{
+            completed: function(newValue){
+                if(newValue) this.countdownStarted = false;
+            }
+           },
+           methods:{
+            toggleCountdown: function(){
+                this.countdownStarted = !this.countdownStarted;
+                this.$emit('countdown-started', this.countdownStarted);
+            }
+           },
+           template: `<button class="trigger-button" v-on:click="toggleCountdown"> {{ countdownStarted ? "Stop" : "Start" }} Countdown</button>` 
+        });
+//------------------------------------------------------------
+// Countdown component
+
+        Vue.component('countdown-component',{
+            data: function(){
+                return{
+                    tick: 10,
+                    countdownInterval: null
+                }
+            },
+            props: ['started'],
+            watch: {
+                started: function(changedValue){
+                    if(changedValue){
+                        this.startCountdown();
+                    }else{
+                        this.stopCountdown();
+                    }
+                    alert("Count componented status changed to "+ changedValue);
+                }
+            },
+            methods:{
+                startCountdown: function(){
+                    if(this.countdownInterval) {
+                        this.stopCountdown();
+                    }
+                    this.countdownInterval = setInterval(()=>{ 
+                        this.tick --;
+                        if(this.tick === 0){
+                            this.$emit('countdown-completed');
+                            this.stopCountdown();
+                        }
+                    },1000);    
+                },
+                stopCountdown: function(){
+                    clearInterval( this.countdownInterval );
+                    this.clearInterval = null;
+                    this.tick = 10;
+                }
+            },
+            template: `<h1 class="tick-value">{{ tick }}</h1>`
+        })
+
+//------------------------------------------------------------
+//Parent component
+
+var vue = new Vue({
+                el: '#app',
+                data: {
+                    title: "Welcome to day 2 of Vuejs",
+                    countdownStatus: false,
+                    countdownCompleted: false,
+                },
+                methods:{
+                    countdownStarted: function(countdownStarted){
+                        this.countdownStatus = countdownStarted
+                        if(this.countdownStatus){
+                            this.countdownCompleted = false;
+                        }
+                    },
+                    countdownCompletion: function(){
+                        this.countdownCompleted = true;
+                    }
+                }
+            })
+        </script>
+
+    </body>
+</html>

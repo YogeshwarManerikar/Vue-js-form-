@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <style>
+            .danger{
+                background-color: red;
+                color: #FFF 
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            {{ title }}
+            <table>
+                <thead>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>MARKS</th>
+                </thead>
+                <tbody>
+                    <tr v-for="record in records">
+                        <td> {{ record.id }} </td>
+                        <td> {{ record.name | uppercase }} </td>
+                        <td> 
+                            <div v-bind:class="{'danger' : record.marks < 15}">{{ record.marks }}</div> 
+                        </td>
+                    <tr>
+                </tbody>
+            </table>
+        </div>
+        <script src="./vue.js"></script>
+        <script>
+        var data = {
+            records:[
+                    {id: 1, name: "John", marks: 5},
+                    {id: 2, name: "Sam", marks: 15},
+                    {id: 3, name: "Tom", marks: 10},
+                    {id: 4, name: "Peter", marks:25},
+                    {id: 4, name: "Jerry", marks: 55},
+                ],
+                title: "Students List"
+        }
+        var vue = new Vue({
+            el: "#app",
+            data: data,
+            filters: {
+                uppercase: function(val){
+                    val = val.toString();
+                    return val.toUpperCase();
+                }
+            }
+        })
+        </script>
+    </body>
+</html>
